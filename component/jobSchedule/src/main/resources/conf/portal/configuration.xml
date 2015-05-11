@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<configuration
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
+   xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
+    <component-plugin>
+      <name>DocRetentionJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.services.scheduler.PeriodJob</type>
+      <description>add a DocRetentionJob job to the JobSchedulerService</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>Remove files without the configured tag, and exceed the retention time from the document repository,run periodically</description>
+          <property name="jobName" value="DocRetentionJob"/>
+          <property name="groupName" value="ContentManagement"/>
+          <property name="job" value="org.exoplatform.intranetExtras.jobs.DocRetentionJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="${DocRetentionJob.cron.period:43200000}"/>
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>
+        </properties-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+ 
+
+</configuration>
