@@ -62,13 +62,16 @@ public class DocRetentionJob implements Job {
   private static String TIMELIMIT =  "30" ;
   private static String TAGNAME =  "keep" ;
 
+  NewFolksonomyService newFolksonomyService ;
+  RepositoryService repoService ;
+
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+
+      newFolksonomyService = (NewFolksonomyService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(NewFolksonomyService.class) ;
+      repoService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
 
 
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-   RepositoryService repoService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-
-
-    Session session = null;
+      Session session = null;
     try {
         session = repoService.getCurrentRepository().getSystemSession(WORKSPACE);
         if (!session.getRootNode().hasNode(DOCREPO.substring(1)) ) {
@@ -122,8 +125,6 @@ public class DocRetentionJob implements Job {
 
 
   private boolean haskeeptag(Node node) throws Exception {
-      NewFolksonomyService newFolksonomyService = (NewFolksonomyService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(NewFolksonomyService.class) ;
-
       List<Node> tagList = newFolksonomyService.getLinkedTagsOfDocument(node,WORKSPACE);
       if (!tagList.isEmpty()) {
          for (Node tag : tagList) {
