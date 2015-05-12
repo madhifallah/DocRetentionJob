@@ -123,20 +123,17 @@ public class DocRetentionJob implements Job {
 
   private boolean haskeeptag(Node node) throws Exception {
       NewFolksonomyService newFolksonomyService = (NewFolksonomyService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(NewFolksonomyService.class) ;
-      boolean ret = false ;
+
       List<Node> tagList = newFolksonomyService.getLinkedTagsOfDocument(node,WORKSPACE);
-      if (tagList.isEmpty()) {
-          ret = false;
-
-      } else {for (Node tag : tagList) {
-          if (tag.getName().equals(TAGNAME)) {
-              ret = true;
-              break;
+      if (!tagList.isEmpty()) {
+         for (Node tag : tagList) {
+            if (tag.getName().equals(TAGNAME)) {
+              return true;
+            }
           }
-
-          } }
-      return ret ;
       }
+      return false ;
+   }
 
   public void deleteNode(Node node) throws Exception{
 	TaxonomyService taxonomyService = (TaxonomyService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(TaxonomyService.class);
