@@ -64,12 +64,6 @@ public class DocRetentionJob implements Job {
 
 
 
-
-
-
-
-
-
     public void execute(JobExecutionContext context) throws JobExecutionException {
    RepositoryService repoService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
 
@@ -77,7 +71,14 @@ public class DocRetentionJob implements Job {
     Session session = null;
     try {
         session = repoService.getCurrentRepository().getSystemSession(WORKSPACE);
+        if (!session.getRootNode().hasNode(DOCREPO.substring(1)) ) {
+
+            session.getRootNode().addNode("docrepo","nt:folder") ;
+            session.save();
+        }
+
         try {
+
             QueryManager queryManager = session.getWorkspace().getQueryManager();
             Query query = queryManager.createQuery("select * from nt:file where jcr:path like '" + DOCREPO + "/%' order by exo:dateCreated DESC ", Query.SQL);
             QueryResult result = query.execute();
@@ -116,7 +117,7 @@ public class DocRetentionJob implements Job {
 
     LOG.info("Document repository successfully processed !");
   }
-  
+
 
 
 
