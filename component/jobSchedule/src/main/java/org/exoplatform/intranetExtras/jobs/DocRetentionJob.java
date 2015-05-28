@@ -72,13 +72,16 @@ public class DocRetentionJob implements Job {
 
 
       Session session = null;
-    try {
+      try {
         session = repoService.getCurrentRepository().getSystemSession(WORKSPACE);
         if (!session.getRootNode().hasNode(DOCREPO.substring(1)) ) {
 
-            session.getRootNode().addNode("docrepo","nt:folder") ;
+            session.getRootNode().addNode(DOCREPO.substring(1),"nt:folder") ;
             session.save();
-        }
+          }
+       } catch (Exception e) {
+        LOG.error(e.getMessage(), e);
+          }
 
         try {
 
@@ -109,9 +112,7 @@ public class DocRetentionJob implements Job {
             LOG.info("Failed to get child nodes", ex);
         }
 
-      } catch (Exception e) {
-              LOG.error(e.getMessage(), e);
-      } finally {
+       finally {
           if (session != null) {
               session.logout();
           }
